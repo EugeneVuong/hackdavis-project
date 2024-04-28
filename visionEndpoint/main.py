@@ -13,6 +13,8 @@ from fastapi.exceptions import HTTPException
 from app import get_image_from_bytes
 from app import detect_sample_model
 
+import uvicorn
+
 
 
 ###################### FastAPI Setup #############################
@@ -125,3 +127,6 @@ def img_object_detection_to_json(file: bytes = File(...)):
 
     # Step 5: Logs and return
     return result
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000)
