@@ -24,7 +24,7 @@ Shock can range from mild, to severe, but should always be taken seriously – e
 
 What Do You Do If You Suspect Someone Is Going Into Shock?
 Continue to apply firm pressure to the wound to prevent them from bleeding out.
-Call 000 or send someone else to call emergency services if you have not already done so.
+
 Lie them down and lift their feet higher than their torso. This keeps their legs higher than their heart, which helps increase blood flow to their brain and vital organs.
 Do not give them anything to drink even if they say they are thirsty.
 Reassure them and wrap them in coats or blankets to keep them warm. It is important to keep a person in shock reassured by telling them they will be fine. If you have a great sense of humour, then use that to address the situation in a light-hearted manner. Even if you suspect the person will die from their injury, NEVER admit that aloud to them. If they tell you of their impending sense of doom, ask them if there is anything you can do for them in case the worst happens, but reassure them that help is on the way and they will survive.
