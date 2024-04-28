@@ -1,11 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
-import Constants from "expo-constants";
-import { Camera, CameraType } from "expo-camera";
-import * as MediaLibrary from "expo-media-library";
-import { MaterialIcons } from "@expo/vector-icons";
-import Button from "../src/components/Button";
-import { inferenceYolo } from "../utils/predict";
+import React, { useState, useEffect, useRef } from 'react';
+import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import Constants from 'expo-constants';
+import { Camera, CameraType } from 'expo-camera';
+import * as MediaLibrary from 'expo-media-library';
+import { MaterialIcons } from '@expo/vector-icons';
+import Button from '../src/components/Button';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import axios from 'axios';
+
 
 export default function App() {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -22,31 +25,87 @@ export default function App() {
     })();
   }, []);
 
+  // const takePicture = async () => {
+  //   if (cameraRef) {
+  //     try {
+  //       const data = await cameraRef.current.takePictureAsync();
+
+  //       setImage(data.uri);
+  //       console.log(data.uri)
+  //       let img = data.uri;
+  //       const sendImageForAnalysis = async (img) => {
+  //         try {
+  //           const response = await axios.post('../utils/predict', { img });
+
+  //           // Handle response from AI (display results etc.)
+  //         } catch (error) {
+  //           console.error('Error sending image:', error);
+  //         }
+  //       };
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  // };
+
   const takePicture = async () => {
     if (cameraRef) {
       try {
         const data = await cameraRef.current.takePictureAsync();
         setImage(data.uri);
+        console.log(data.uri);
+        let img = data.uri;
+  
+        // Navigation Logic (assuming you use React Navigation)
+        navigation.navigate('Chat', { imageUri: img });
+  
+        // ... rest of your code (optional: sendImageForAnalysis)
       } catch (error) {
         console.log(error);
       }
     }
   };
+  
 
   const savePicture = async () => {
     if (image) {
       try {
-        const asset = await MediaLibrary.createAssetAsync(image);
-        const yolo = await inferenceYolo(asset.uri);
-        console.log(yolo);
-        alert("Picture saved! 🎉");
+        // Replace with your actual API endpoint URL
+        const response = await axios.post('http://localhost:3000/askAI', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Set headers if your API expects them
+          },
+        });
+        alert('Picture Sent! Awaiting Response :D ');
         setImage(null);
-        console.log("saved successfully");
+        console.log('Sent successfully');
+
+        // Prepare image data for API request (adjust based on your API requirements)
+        const formData = new FormData();
+        formData.append('image', {
+          uri: image, // Or you might need to use asset.uri
+          type: 'image/jpeg', // Adjust based on your API's expected format
+          name: 'chat_image.jpg', // Optional: Set a filename
+        });
+
+        // Replace with your actual API endpoint URL
+
+        const data = await response.json();
+        console.log(data); // Log the API response
+
+        // Handle successful upload and response data (e.g., navigate to chat screen with image URL)
+        if (data.success) {
+          const imageUri = data.imageUrl; // Replace with the actual response property name for image URL
+          navigation.navigate('Chat', { imageUri }); // Navigate to Chat screen with image URL
+        } else {
+          console.error('Error uploading image:', data.error); // Handle upload errors
+        }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
   };
+
 
   if (hasCameraPermission === false) {
     return <Text>No access to camera</Text>;
@@ -108,7 +167,7 @@ export default function App() {
               onPress={() => setImage(null)}
               icon="retweet"
             />
-            <Button title="Save" onPress={savePicture} icon="check" />
+            <Button title="Ask AI" onPress={savePicture} icon="check" />
           </View>
         ) : (
           <Button title="Take a picture" onPress={takePicture} icon="camera" />
