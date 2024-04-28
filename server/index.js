@@ -1,47 +1,29 @@
-import express from 'express'
-import supabase from './supabaseClient.js'
-const app = express()
-const port = 3000
+import express from "express";
 
-app.get('/', async (req, res) => {
-  res.send('Hello World!')
-  // const {data, error} = await supabase
-  // .from('smoothies')
-  // .select()
+import runLangChainScript from "./langChainScript.js";
+const app = express();
+const port = 3000;
 
-  // console.log(data)
-  const title = 'dople blue'
-  const method = 'Avocado, blueberries, and pineapple'
-  const rating = 8
-  // const{data1,error1} = await supabase
-  // .from('smoothies')
-  // .insert([{title, method, rating }])
+app.use(express.json());
 
-  // const{data2, error2} = await supabase
-  // .from('smoothies')
-  // .update([{title, method, rating}])
-  // .eq('id','5')
-  // .select()
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 
-  // const{data3, error3} = await supabase
-  // .from('smoothies')
-  // .delete()
-  // .eq('id','6')
-  // .select()
+app.get("/he", (req, res) => {
+  res.send("bruh");
+});
 
-  const{data, error} = await supabase 
-    .from('smoothies')
-    .select()
-    .order('id', {ascending:false})
-
-  console.log(data)
-})
-
-app.get('/he', (req, res) => {
-  res.send('bruh')
-})
+app.post("/askAI", async (req, res) => {
+  try {
+    const { question } = req.body;
+    const response = await runLangChainScript(question);
+    res.send(response);
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
-
+  console.log(`Example app listening on port ${port}`);
+});
